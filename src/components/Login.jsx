@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { query, where, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({usersRef}) => {
+const Login = ({usersRef, setIsAdmin, setIsLoggedIn}) => {
 
 	let navigate = useNavigate();
 
-	const red = (data) => {
-		if(data.hasOwnProperty("isAdmin")) {
+	const redirect = (data) => {
+		if(data.hasOwnProperty("isAdmin") && data.isAdmin) {
 			console.log("heuy")
+			setIsLoggedIn(true);
+			setIsAdmin(true);
 			navigate('/admin', { replace: true });
-		} else navigate('/user', { replace: true });
+		} else {
+			setIsLoggedIn(true);
+			navigate('/user', { replace: true });
+		}
 	}
 
 	const [email, setEmail] = useState('user1@sb.com');
@@ -31,8 +36,6 @@ const Login = ({usersRef}) => {
 					Swal.showLoading();
 				},
 				willClose: () => {
-					// localStorage.setItem('is_authenticated', true);
-					//   setIsAuthenticated(true);
 
 					Swal.fire({
 						icon: 'success',
@@ -43,7 +46,7 @@ const Login = ({usersRef}) => {
 							querySnapshot.forEach(doc => {
 								const data = doc.data()
 								console.log(data);
-								return red(data);
+								return redirect(data);
 							})
 						}
 					});

@@ -32,8 +32,6 @@ const SignUp = ({usersRef}) => {
 					Swal.showLoading();
 				},
 				willClose: () => {
-				//   localStorage.setItem('is_authenticated', false);
-				//   setIsAuthenticated(true);
 
 					Swal.fire({
 						icon: 'success',
