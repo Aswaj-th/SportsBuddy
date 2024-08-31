@@ -11,7 +11,8 @@ import Admin from './components/Admin'
 function App() {
 
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [userId, setUserId] = useState(null);
   const usersRef = collection(db, "users");
   const sportsRef = collection(db, "sportNames");
   const citiesRef = collection(db, "cities");
@@ -44,6 +45,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
+      {/* <User /> */}
     </>
   )
 }
