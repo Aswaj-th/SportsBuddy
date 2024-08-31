@@ -3,18 +3,20 @@ import Swal from 'sweetalert2';
 import { query, where, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({usersRef, setIsAdmin, setIsLoggedIn}) => {
+const Login = ({usersRef, setIsAdmin, setIsLoggedIn, setUserId}) => {
 
 	let navigate = useNavigate();
 
 	const redirect = (data) => {
-		if(data.hasOwnProperty("isAdmin") && data.isAdmin) {
+		if(data.data.hasOwnProperty("isAdmin") && data.data.isAdmin) {
 			console.log("heuy")
 			setIsLoggedIn(true);
 			setIsAdmin(true);
+			setUserId({id: data.id, email: data.data.email});
 			navigate('/admin', { replace: true });
 		} else {
 			setIsLoggedIn(true);
+			setUserId({id: data.id, email:data.data.email});
 			navigate('/user', { replace: true });
 		}
 	}
@@ -41,11 +43,14 @@ const Login = ({usersRef, setIsAdmin, setIsLoggedIn}) => {
 						icon: 'success',
 						title: 'Successfully logged in!',
 						showConfirmButton: false,
-						timer: 1500,
+						timer: 500,
 						willClose: () => {
 							querySnapshot.forEach(doc => {
-								const data = doc.data()
-								console.log(data);
+								const data = {
+									id: doc.id,
+									data: doc.data()
+								}
+								// console.log(data);
 								return redirect(data);
 							})
 						}

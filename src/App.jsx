@@ -7,25 +7,28 @@ import SignUp from './components/Signup'
 import User from './components/User'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, Navigate } from 'react-router-dom'
 import Admin from './components/Admin'
+import AddEventForm from './components/AddEventForm'
 
 function App() {
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState({id: "Hl3jLOSE8mLKHXlr4zIx", email: "user1@sb.com"});
   const usersRef = collection(db, "users");
   const sportsRef = collection(db, "sportNames");
   const citiesRef = collection(db, "cities");
   const sportsEventsRef = collection(db, "sportEvents");
+  const areasRef = collection(db, "areas");
 
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-      <Route path='/' element={isLoggedIn ? <User /> : <Navigate replace to={'/login'} />} />
-      <Route path='/login' element={<Login usersRef={usersRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} />} />
+      <Route path='/' element={isLoggedIn ? <User sportsEventsRef={sportsEventsRef} userId={userId} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} /> : <Navigate replace to={'/login'} />} />
+      <Route path='/login' element={<Login usersRef={usersRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />} />
       <Route path='/signup' element={<SignUp usersRef={usersRef} />} />
-      <Route path='/user' element={isLoggedIn ? <User sportsEventsRef={sportsEventsRef}/> : <Navigate replace to={'/login'} />} />
-      <Route path='/admin' element={isLoggedIn ? isAdmin ? <Admin /> : <Navigate replace to='/404' /> : <User />} />
+      <Route path='/user' element={isLoggedIn ? <User userId={userId} sportsEventsRef={sportsEventsRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} /> : <Navigate replace to={'/login'} />} />
+      <Route path='/add' element={isLoggedIn ? <AddEventForm sportsEventsRef={sportsEventsRef} sportsRef={sportsRef} citiesRef={citiesRef} areasRef={areasRef} userId={userId} /> : <Navigate replace to={'/login'} />} />
+      <Route path='/admin' element={isLoggedIn ? isAdmin ? <Admin /> : <Navigate replace to='/404' /> : <User userId={userId} sportsEventsRef={sportsEventsRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />} />
       </>
     )
   )
@@ -46,6 +49,7 @@ function App() {
     <>
       <RouterProvider router={router} />
       {/* <User /> */}
+      {/* <AddEventForm sportsEventsRef={sportsEventsRef} sportsRef={sportsRef} citiesRef={citiesRef} areasRef={areasRef} userId={userId}/> */}
     </>
   )
 }
