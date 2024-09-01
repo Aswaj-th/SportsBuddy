@@ -11,9 +11,9 @@ import AddEventForm from './components/AddEventForm'
 
 function App() {
 
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [userId, setUserId] = useState({id: "Hl3jLOSE8mLKHXlr4zIx", email: "user1@sb.com"});
+  const [userId, setUserId] = useState({id: "l3BuU7ZVufPZveQNVH9o", email: "admin@sportsBuddy.com"});
   const usersRef = collection(db, "users");
   const sportsRef = collection(db, "sportNames");
   const citiesRef = collection(db, "cities");
@@ -23,11 +23,11 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-      <Route path='/' element={isLoggedIn ? <User areasRef={areasRef} citiesRef={citiesRef} sportsRef={sportsRef} sportsEventsRef={sportsEventsRef} userId={userId} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} /> : <Navigate replace to={'/login'} />} />
+      <Route path='/' element={isLoggedIn ? isAdmin ? <Admin sportsRef={sportsRef} citiesRef={citiesRef} areasRef={areasRef} sportsEventsRef={sportsEventsRef}/> :<User areasRef={areasRef} citiesRef={citiesRef} sportsRef={sportsRef} sportsEventsRef={sportsEventsRef} userId={userId} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} /> : <Navigate replace to={'/login'} />} />
       <Route path='/login' element={<Login usersRef={usersRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />} />
       <Route path='/signup' element={<SignUp usersRef={usersRef} />} />
       <Route path='/user' element={isLoggedIn ? <User areasRef={areasRef} citiesRef={citiesRef} sportsRef={sportsRef} userId={userId} sportsEventsRef={sportsEventsRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} /> : <Navigate replace to={'/login'} />} />
-      <Route path='/admin' element={isLoggedIn ? isAdmin ? <Admin /> : <Navigate replace to='/404' /> : <User areasRef={areasRef} citiesRef={citiesRef} sportsRef={sportsRef} userId={userId} sportsEventsRef={sportsEventsRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />} />
+      <Route path='/admin' element={isLoggedIn ? isAdmin ? <Admin sportsEventsRef={sportsEventsRef} sportsRef={sportsRef} citiesRef={citiesRef} areasRef={areasRef} /> : <Navigate replace to='/404' /> : <User areasRef={areasRef} citiesRef={citiesRef} sportsRef={sportsRef} userId={userId} sportsEventsRef={sportsEventsRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />} />
       </>
     )
   )

@@ -5,7 +5,7 @@ import {db} from '../config/firestore'
 
 
 
-const EventDetails = ({fullData, userId, setEvents, setShowAdd, setDefInputs}) => {
+const EventDetails = ({fullData, setEvents}) => {
     let data = fullData.data;
 
     const handleDelete = () => {
@@ -30,24 +30,6 @@ const EventDetails = ({fullData, userId, setEvents, setShowAdd, setDefInputs}) =
           });
     }
 
-    const handleUpdate = () => {
-        Swal.fire({
-            title: "Are you sure?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, I need to update it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                setDefInputs(data);
-                deleteDoc(doc(db, "sportEvents", fullData.id));
-                setEvents(events => events.filter((el) => el.id !== fullData.id))
-                setShowAdd(true);
-            }
-          });
-    }
-
     return (
         <>
         <div className="max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col">
@@ -65,16 +47,11 @@ const EventDetails = ({fullData, userId, setEvents, setShowAdd, setDefInputs}) =
             <p className="mt-6 mb-2 mx-4 ml-8 text-lg tracking-tight text-gray-600 text-left dark:text-white">{data.desc}</p>
             <p className="mb-3 font-normal text-left mx-4 text-gray-700 dark:text-gray-400">{data.location}</p>
             <p className="mb-3 font-normal text-left mx-4 text-gray-700 dark:text-gray-400">{data.time}</p>
-            {userId.email === data.createdByName && 
-                <div className="flex justify-between mt-6">
-                    <div onClick={handleDelete} className="cursor-pointer inline-flex items-center px-3 py-2 mx-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        Delete
-                    </div>
-                    <div onClick={handleUpdate} className="cursor-pointer inline-flex items-center px-3 py-2 mx-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        Update
-                    </div>
+            <div className="flex justify-between mt-6">
+                <div onClick={handleDelete} className="cursor-pointer inline-flex items-center px-3 py-2 mx-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Delete
                 </div>
-            }
+            </div>
         </div>
         </>
     );

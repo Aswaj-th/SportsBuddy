@@ -42,7 +42,7 @@ const AddEventForm = ({setShowAdd, sportsEventsRef, sportsRef, citiesRef, areasR
         return;
       } 
       if(name == "areaName") {
-        setInputs(values => ({...values, [name]:value, ["area"]: doc(db, 'areaes' + findAreaId(value))}))
+        setInputs(values => ({...values, [name]:value, ["area"]: doc(db, 'areas' + findAreaId(value))}))
         return;
       }
       setInputs(values => ({...values, [name]: value}))
