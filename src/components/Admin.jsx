@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { query, where, getDocs, doc , addDoc} from "firebase/firestore";  
 import { db } from '../config/firestore';
-import List from './List';
 import EventDetailsAdmin from './EventDetailsAdmin';
+import { useNavigate } from 'react-router-dom';
 
-const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef}) => {
+const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setUserId, setIsLoggedIn}) => {
+
+	let navigate = useNavigate();
 
 	const [sports, setSports] = useState([]);
 	const [cities, setCities] = useState([]);
