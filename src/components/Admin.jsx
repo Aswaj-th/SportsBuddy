@@ -140,9 +140,10 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef}) => {
 
 	return (
 		<>
-		<h1 className="txt-3xl">
-			Admin Page
-		</h1>
+		<div className="flex justify-between p-4">
+			<div className="text-2xl">Admin</div>
+			<div onClick={handleLogOut} className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/6 sm:w-1/6 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Log Out</div>
+		</div>
 		<div className="p-6 m-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 			<div className="flex justify-between">
 				<h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Cities available</h5>
