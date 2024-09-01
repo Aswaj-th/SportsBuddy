@@ -3,26 +3,14 @@ import {db} from '../config/firestore'
 import { query, where, doc, getDocs, collection, addDoc} from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 
-const AddEventForm = ({sportsEventsRef, sportsRef, citiesRef, areasRef, userId}) => {
+const AddEventForm = ({setShowAdd, sportsEventsRef, sportsRef, citiesRef, areasRef, userId, defInputs}
+) => {
 
     let navigate = useNavigate();
     const [sports, setSports] = useState([]);
     const [cities, setCities] = useState([]);
     const [areas, setAreas] = useState([]);
-    const [inputs, setInputs] = useState({
-        sportName: "Badminton",
-        sport: doc(db, "sportNames", "3rOAr9np4AJAHfyMAjOf"),
-        cityName: "Mumbai",
-        city: doc(db, "cities", "V5mm6N2mH6PYWBslfV2H"),
-        areaName: "Navi Mumbai",
-        area: doc(db, "areas", "F33RAzJQYJBasngVKJKU"),
-        desc: "",
-        time: "",
-        location: "",
-        createdBy: doc(db, "users", userId.id),
-        createdByName: userId.email,
-        number: 0
-    });
+    const [inputs, setInputs] = useState(defInputs);
 
     const findSportId = (sport) => {
         for(let i = 0; i < sports.length; i++) {
@@ -64,21 +52,8 @@ const AddEventForm = ({sportsEventsRef, sportsRef, citiesRef, areasRef, userId})
         event.preventDefault();
         console.log(inputs);
         const docRef = await addDoc(sportsEventsRef, inputs);
-        setInputs({
-            sportName: "Badminton",
-            sport: doc(db, "sportNames", "3rOAr9np4AJAHfyMAjOf"),
-            cityName: "Mumbai",
-            city: doc(db, "cities", "V5mm6N2mH6PYWBslfV2H"),
-            areaName: "Navi Mumbai",
-            area: doc(db, "areas", "F33RAzJQYJBasngVKJKU"),
-            desc: "",
-            time: "",
-            location: "",
-            createdBy: doc(db, "users", userId.id),
-            createdByName: userId.email,
-            number: 0
-        })
-        navigate('/user', {replace: true})
+        setInputs(defInputs)
+        setShowAdd(false);
     }
 
     async function getAreas() {

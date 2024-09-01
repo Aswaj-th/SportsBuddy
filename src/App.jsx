@@ -23,12 +23,11 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-      <Route path='/' element={isLoggedIn ? <User sportsEventsRef={sportsEventsRef} userId={userId} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} /> : <Navigate replace to={'/login'} />} />
+      <Route path='/' element={isLoggedIn ? <User areasRef={areasRef} citiesRef={citiesRef} sportsRef={sportsRef} sportsEventsRef={sportsEventsRef} userId={userId} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} /> : <Navigate replace to={'/login'} />} />
       <Route path='/login' element={<Login usersRef={usersRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />} />
       <Route path='/signup' element={<SignUp usersRef={usersRef} />} />
-      <Route path='/user' element={isLoggedIn ? <User userId={userId} sportsEventsRef={sportsEventsRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} /> : <Navigate replace to={'/login'} />} />
-      <Route path='/add' element={isLoggedIn ? <AddEventForm sportsEventsRef={sportsEventsRef} sportsRef={sportsRef} citiesRef={citiesRef} areasRef={areasRef} userId={userId} /> : <Navigate replace to={'/login'} />} />
-      <Route path='/admin' element={isLoggedIn ? isAdmin ? <Admin /> : <Navigate replace to='/404' /> : <User userId={userId} sportsEventsRef={sportsEventsRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />} />
+      <Route path='/user' element={isLoggedIn ? <User areasRef={areasRef} citiesRef={citiesRef} sportsRef={sportsRef} userId={userId} sportsEventsRef={sportsEventsRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} /> : <Navigate replace to={'/login'} />} />
+      <Route path='/admin' element={isLoggedIn ? isAdmin ? <Admin /> : <Navigate replace to='/404' /> : <User areasRef={areasRef} citiesRef={citiesRef} sportsRef={sportsRef} userId={userId} sportsEventsRef={sportsEventsRef} setIsAdmin={setIsAdmin} setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />} />
       </>
     )
   )
