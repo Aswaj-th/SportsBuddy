@@ -113,31 +113,195 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 
 	const handleAddCity = async (e) => {
 		e.preventDefault();
-		const docRef = await addDoc(citiesRef, {"name": cityName});
-		setCityName("");
-		getCities();
-		setAddCity(false);
+		const checkUser = query(citiesRef, where("name", "==", cityName));
+		const querySnapshot = await getDocs(checkUser);
+		if(querySnapshot.size === 0) {
+			try {
+				await addDoc(citiesRef, {"name": cityName})
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+	
+						Swal.fire({
+							icon: 'success',
+							title: 'Successfully Added City!',
+							showConfirmButton: false,
+							timer: 1500,
+						});
+					},
+				});
+				getCities();
+				setCityName("");
+				setAddCity(false);
+			} catch (error) {
+				console.log(error)
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error!',
+							text: 'Error Adding City',
+							showConfirmButton: true,
+						});
+					},
+				});
+			}
+		} else {
+			Swal.fire({
+				timer: 500,
+				showConfirmButton: false,
+				willOpen: () => {
+					Swal.showLoading();
+				},
+				willClose: () => {
+					Swal.fire({
+						icon: 'error',
+						title: 'Error!',
+						text: 'This City already exists',
+						showConfirmButton: true,
+					});
+				},
+			});
+		}
 	}
 
 	const handleAddArea = async (e) => {
 		e.preventDefault();
-		const docRef = await addDoc(areasRef, {
-			"area": areaName,
-			"cityName": selectedCity,
-			"city": doc(db, "areas", findCityId(selectedCity))
-		});
-		setAreaName("");
-		setSelectedCity("");
-		getAreas();
-		setAddArea(false);
+		const checkUser = query(areasRef, where("area", "==", areaName), where("cityName", "==", selectedCity));
+		const querySnapshot = await getDocs(checkUser);
+		if(querySnapshot.size === 0) {
+			try {
+				await addDoc(areasRef, {
+					"area": areaName,
+					"cityName": selectedCity,
+					"city": doc(db, "areas", findCityId(selectedCity))
+				});
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+						Swal.fire({
+							icon: 'success',
+							title: 'Successfully Added Area!',
+							showConfirmButton: false,
+							timer: 1500,
+						});
+					},
+				});
+				setAreaName("");
+				setSelectedCity("");
+				getAreas();
+				setAddArea(false);
+			} catch (error) {
+				console.log(error)
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error!',
+							text: 'Error Adding Area',
+							showConfirmButton: true,
+						});
+					},
+				});
+			}
+		} else {
+			Swal.fire({
+				timer: 500,
+				showConfirmButton: false,
+				willOpen: () => {
+					Swal.showLoading();
+				},
+				willClose: () => {
+					Swal.fire({
+						icon: 'error',
+						title: 'Error!',
+						text: 'This Area already exists',
+						showConfirmButton: true,
+					});
+				},
+			});
+		}
 	}
 
 	const handleAddSport = async (e) => {
 		e.preventDefault();
-		const docRef = await addDoc(sportsRef, {"name": sportName});
-		getSports();
-		setSportName("");
-		setAddSport(false);
+		const checkUser = query(sportsRef, where("name", "==", sportName));
+		const querySnapshot = await getDocs(checkUser);
+		if(querySnapshot.size === 0) {
+			try {
+				await addDoc(sportsRef, {"name": sportName})
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+	
+						Swal.fire({
+							icon: 'success',
+							title: 'Successfully Added Sport!',
+							showConfirmButton: false,
+							timer: 1500,
+						});
+					},
+				});
+				getSports();
+				setSportName("");
+				setAddSport(false);
+			} catch (error) {
+				console.log(error)
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error!',
+							text: 'Error Adding Sport',
+							showConfirmButton: true,
+						});
+					},
+				});
+			}
+		} else {
+			Swal.fire({
+				timer: 500,
+				showConfirmButton: false,
+				willOpen: () => {
+					Swal.showLoading();
+				},
+				willClose: () => {
+					Swal.fire({
+						icon: 'error',
+						title: 'Error!',
+						text: 'This Sport already exists',
+						showConfirmButton: true,
+					});
+				},
+			});
+		}
 	}
 
 	return (
@@ -149,27 +313,28 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 		<div className="p-6 m-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 			<div className="flex justify-between">
 				<h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Cities available</h5>
-				<div onClick={() => setAddCity(true)} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+				<div onClick={() => setAddCity(true)} className="cursor-pointer inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
 					Add City
 				</div>
 			</div>
-			<ul className="text-left text-gray-500 list-disc list-inside dark:text-gray-400">
-				{cities.map((el, i) => {
-					return (
-						<li key={i}>
-							<div className="flex justify-between">
-								<div>{el.name}</div>
-								<div onClick={() => {
-									setAddArea(true);
-									setSelectedCity(el.name)
-								}} className="inline-flex items-center px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-									Add area
-								</div>
-							</div>
-						</li>
-					)
-				})}
-			</ul>
+			{cities.map((el, i) => {
+				return (
+					<div key={i} className="flex justify-between m-2">
+						<div className='flex items-center'>
+						<svg className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+							<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+						</svg>
+						<div>{el.name}</div>
+						</div>
+						<div onClick={() => {
+							setAddArea(true);
+							setSelectedCity(el.name)
+						}} className="cursor-pointer inline-flex items-center px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+							Add area
+						</div>
+					</div>
+				)
+			})}
 		</div>
 		{addCity && 
 		<>
@@ -178,7 +343,13 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 				<label htmlFor="cityName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City Name</label>
 				<input value={cityName} onChange={(e) => setCityName(e.target.value)} type="text" name="cityName" id="cityName" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
 			</div>
-			<button type="submit" onClick={(e) => handleAddCity(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+			<div className="flex justify-around">
+				<button type="submit" onClick={(e) => handleAddCity(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+				<button onClick={() => {
+					setAddCity(false);
+					setCityName("");
+				}} className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">close</button>
+			</div>
 		</form>
 		</>}
 		{addArea && 
@@ -188,13 +359,20 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 				<label htmlFor="areaName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Area Name</label>
 				<input value={areaName} onChange={(e) => setAreaName(e.target.value)} type="text" name="areaName" id="areaName" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
 			</div>
-			<button type="submit" onClick={(e) => handleAddArea(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-		</form>
+			<div className="flex justify-around">
+				<button type="submit" onClick={(e) => handleAddArea(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+				<button onClick={() => {
+					setAddArea(false);
+					setSelectedCity("");
+					setAreaName("");
+				}} className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">close</button>
+			</div>
+			</form>
 		</>}
 		<div className="p-6 m-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 			<div className="flex justify-between">
 				<h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Sports available</h5>
-				<div onClick={() => setAddSport(true)} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+				<div onClick={() => setAddSport(true)} className="cursor-pointer inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
 					Add Sports
 				</div>
 			</div>
@@ -211,7 +389,13 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 				<label htmlFor="sportName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sport name</label>
 				<input value={sportName} onChange={(e) => setSportName(e.target.value)} type="text" name="sportName" id="sportName" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
 			</div>
-			<button type="submit" onClick={(e) => handleAddSport(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+			<div className="flex justify-around">
+				<button type="submit" onClick={(e) => handleAddSport(e)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+				<button onClick={() => {
+					setAddSport(false)
+					setSportName("");
+				}} className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">close</button>
+			</div>
 		</form>
 		</>}
 		<div className="p-6 m-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
