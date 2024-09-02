@@ -21,8 +21,8 @@ const Login = ({usersRef, setIsAdmin, setIsLoggedIn, setUserId}) => {
 		}
 	}
 
-	const [email, setEmail] = useState('admin@sportsBuddy.com');
-	const [password, setPassword] = useState('adminpassword');
+	const [email, setEmail] = useState('user1@sb.com');
+	const [password, setPassword] = useState('heythere');
 
 	const handleLogin = async e => {
 		e.preventDefault();
