@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { query, where, getDocs, doc , addDoc} from "firebase/firestore";  
+import { query, where, getDocs, doc , addDoc, updateDoc} from "firebase/firestore";  
 import { db } from '../config/firestore';
 import EventDetailsAdmin from './EventDetailsAdmin';
 import { useNavigate } from 'react-router-dom';
@@ -20,10 +20,29 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 	const [areaName, setAreaName] = useState("");
 	const [sportName, setSportName] = useState("");
 	const [selectedCity, setSelectedCity] = useState("");
+	const [isUpdatingCity, setIsUpdatingCity] = useState(false);
+	const [isUpdatingArea, setIsUpdatingArea] = useState(false);
+	const [isUpdatingSport, setIsUpdatingSport] = useState(false);
+	const [prevSportName, setPrevSportName] = useState("");
+	const [prevCityName, setPrevCityName] = useState("");
+	const [prevAreaName, setPrevAreaName] = useState("");
 
 	const findCityId = (city) => {
         for(let i = 0; i < cities.length; i++) {
             if(cities[i].name == city) return cities[i].id
+        }
+    }
+
+	const findSportId = (sport) => {
+        for(let i = 0; i < sports.length; i++) {
+            if(sports[i].name == sport) return sports[i].id
+        }
+    }
+
+	const findAreaId = (area, city) => {
+        for(let i = 0; i < areas.length; i++) {
+			// console.log(areas[i].area)
+            if(areas[i].data.area == area && areas[i].data.cityName == city) return areas[i].id
         }
     }
 
@@ -113,6 +132,53 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 
 	const handleAddCity = async (e) => {
 		e.preventDefault();
+		if(isUpdatingCity) {
+			const currentCityRef = doc(db, "cities", findCityId(prevCityName));
+			try {
+				await updateDoc(currentCityRef, {
+					name: cityName
+				});
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+	
+						Swal.fire({
+							icon: 'success',
+							title: 'Successfully Updated City!',
+							showConfirmButton: false,
+							timer: 1500,
+						});
+					},
+				});
+				getCities();
+				setCityName("");
+				setIsUpdatingCity(false);
+				setPrevCityName("");
+				setAddCity(false);
+			} catch (error) {
+				console.log(error)
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error!',
+							text: 'Error Updating Sport',
+							showConfirmButton: true,
+						});
+					},
+				});
+			}
+			return;
+		}
 		const checkUser = query(citiesRef, where("name", "==", cityName));
 		const querySnapshot = await getDocs(checkUser);
 		if(querySnapshot.size === 0) {
@@ -176,6 +242,54 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 
 	const handleAddArea = async (e) => {
 		e.preventDefault();
+		if(isUpdatingArea) {
+			const currentAreaRef = doc(db, "areas", findAreaId(prevAreaName, selectedCity));
+			try {
+				await updateDoc(currentAreaRef, {
+					"area": areaName
+				});
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+	
+						Swal.fire({
+							icon: 'success',
+							title: 'Successfully Updated Area!',
+							showConfirmButton: false,
+							timer: 1500,
+						});
+					},
+				});
+				getAreas();
+				setAreaName("");
+				setIsUpdatingArea(false);
+				setPrevAreaName("");
+				setSelectedCity("");
+				setAddArea(false);
+			} catch (error) {
+				console.log(error)
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error!',
+							text: 'Error Updating Area',
+							showConfirmButton: true,
+						});
+					},
+				});
+			}
+			return;
+		}
 		const checkUser = query(areasRef, where("area", "==", areaName), where("cityName", "==", selectedCity));
 		const querySnapshot = await getDocs(checkUser);
 		if(querySnapshot.size === 0) {
@@ -243,6 +357,53 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 
 	const handleAddSport = async (e) => {
 		e.preventDefault();
+		if(isUpdatingSport) {
+			const currentSportRef = doc(db, "sportNames", findSportId(prevSportName));
+			try {
+				await updateDoc(currentSportRef, {
+					name: sportName
+				});
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+	
+						Swal.fire({
+							icon: 'success',
+							title: 'Successfully Updated Sport!',
+							showConfirmButton: false,
+							timer: 1500,
+						});
+					},
+				});
+				getSports();
+				setSportName("");
+				setIsUpdatingSport(false);
+				setPrevSportName("");
+				setAddSport(false);
+			} catch (error) {
+				console.log(error)
+				Swal.fire({
+					timer: 500,
+					showConfirmButton: false,
+					willOpen: () => {
+						Swal.showLoading();
+					},
+					willClose: () => {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error!',
+							text: 'Error Updating Sport',
+							showConfirmButton: true,
+						});
+					},
+				});
+			}
+			return;
+		}
 		const checkUser = query(sportsRef, where("name", "==", sportName));
 		const querySnapshot = await getDocs(checkUser);
 		if(querySnapshot.size === 0) {
@@ -321,16 +482,39 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 				return (
 					<div key={i} className="flex justify-between m-2">
 						<div className='flex items-center'>
-						<svg className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-							<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-						</svg>
-						<div>{el.name}</div>
+							<svg className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+								<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+							</svg>
+							<div>{el.name}</div>
 						</div>
-						<div onClick={() => {
-							setAddArea(true);
-							setSelectedCity(el.name)
-						}} className="cursor-pointer inline-flex items-center px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-							Add area
+						<div className="flex">
+							<div onClick={() => {
+								let errorChance = false;
+								areas.forEach((area) => {
+									if(area.data.cityName === el.name) errorChance = true;
+								})
+								if(errorChance === true) {
+									Swal.fire({
+										icon: 'error',
+										title: 'Error!',
+										text: 'Error Updating City as there are already areas within the city',
+										showConfirmButton: true,
+									});
+									return;
+								}
+								setAddCity(true);
+								setIsUpdatingCity(true);
+								setPrevCityName(el.name);
+								setCityName(el.name);
+							}} className="cursor-pointer mx-2 inline-flex items-center px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+								Update City
+							</div>
+							<div onClick={() => {
+								setAddArea(true);
+								setSelectedCity(el.name)
+							}} className="cursor-pointer inline-flex items-center px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+								Add area
+							</div>
 						</div>
 					</div>
 				)
@@ -365,6 +549,7 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 					setAddArea(false);
 					setSelectedCity("");
 					setAreaName("");
+					setIsUpdatingArea(false);
 				}} className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">close</button>
 			</div>
 			</form>
@@ -378,7 +563,24 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 			</div>
 			<ul className="text-left text-gray-500 list-disc list-inside dark:text-gray-400">
 				{sports.map((el, i) => {
-					return <li key={i}>{el.name}</li>
+					return 	(
+						<div key={i} className="flex justify-between m-2">
+						<div className='flex items-center'>
+						<svg className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+							<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+						</svg>
+						<div>{el.name}</div>
+						</div>
+						<div onClick={() => {
+							setAddSport(true);
+							setIsUpdatingSport(true);
+							setPrevSportName(el.name);
+							setSportName(el.name);
+						}} className="cursor-pointer inline-flex items-center px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+							Update Sport
+						</div>
+						</div>
+					)
 				})}
 			</ul>
 		</div>
@@ -404,7 +606,25 @@ const Admin = ({citiesRef, areasRef, sportsRef, sportsEventsRef,setIsAdmin, setU
 			</div>
 			<ul className="text-left text-gray-500 list-disc list-inside dark:text-gray-400">
 				{areas.map((el, i) => {
-					return <li key={i}>{el.data.area}, {el.data.cityName}</li>
+					return 	(
+						<div key={i} className="flex justify-between m-2">
+						<div className='flex items-center'>
+						<svg className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+							<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+						</svg>
+						<div>{el.data.area}, {el.data.cityName}</div>
+						</div>
+						<div onClick={() => {
+							setAddArea(true);
+							setIsUpdatingArea(true);
+							setPrevAreaName(el.data.area);
+							setAreaName(el.data.area);
+							setSelectedCity(el.data.cityName);
+						}} className="cursor-pointer inline-flex items-center px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+							Update Area
+						</div>
+						</div>
+					)
 				})}
 			</ul>
 		</div>
