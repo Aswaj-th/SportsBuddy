@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { query, where, getDocs, getDoc, doc, updateDoc, limit} from "firebase/firestore";
 import { db } from '../config/firestore';  
-import List from './List';
 import EventDetails from './EventDetails';
 import { useNavigate } from 'react-router-dom';
 import AddEventForm from './AddEventForm';
