@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { query, where, getDocs, addDoc } from "firebase/firestore";  
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = ({usersRef}) => {
-
+	let navigate = useNavigate()
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
@@ -18,7 +18,8 @@ const SignUp = ({usersRef}) => {
 		const newUser = {
 			email,
 			password,
-			isAdmin: false
+			isAdmin: false,
+			preferences: []
 		}
 
 		try {
@@ -41,7 +42,7 @@ const SignUp = ({usersRef}) => {
 					});
 				},
 			});
-			return <Navigate to="/login" replace />
+			navigate('/login', {replace: true})
 		} catch (error) {
 			console.log(error)
 			Swal.fire({

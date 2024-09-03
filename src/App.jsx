@@ -12,8 +12,8 @@ import AddEventForm from './components/AddEventForm'
 function App() {
 
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [userId, setUserId] = useState({email: 'user1@sb.com', id: "Hl3jLOSE8mLKHXlr4zIx"});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState();
   const usersRef = collection(db, "users");
   const sportsRef = collection(db, "sportNames");
   const citiesRef = collection(db, "cities");

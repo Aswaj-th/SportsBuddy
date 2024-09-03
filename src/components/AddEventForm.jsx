@@ -50,7 +50,7 @@ const AddEventForm = ({setShowAdd, sportsEventsRef, sportsRef, citiesRef, areasR
   
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(inputs);
+        // console.log(inputs);
         const docRef = await addDoc(sportsEventsRef, inputs);
         setInputs(defInputs)
         setShowAdd(false);
