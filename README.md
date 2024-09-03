@@ -1,8 +1,19 @@
-# React + Vite
+# Sports Buddy 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
+- The website has two main types of users, admin and user.
+- Any user can sign up to the website using their email.
+- Users can login through their account and select the sports they are interested in.
+- They will be shown only those sports which they have preferred.
+- Users can add new sports to update their preferences.
+- Users can create new sport events of their choice by providing details using a
+form.
+- Users can update or delete sport events that they have created, but not the ones
+other users have created.
+- Users can log out of their account.
+- Admins can login to their account from the same login view.
+- Admin can view all cities, sports and areas within cities.
+- They can also update or add cities, sports and areas.
+- Admins can view all the events created by any user and can delete any of them
+in case of suspicion.
+- Admins can log out of their account.
